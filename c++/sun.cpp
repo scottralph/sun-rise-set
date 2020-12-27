@@ -28,6 +28,8 @@
 
 */
 
+#define TEST_OUTPUT 1
+
 #include <math.h>
 #include <stdio.h>
 #include <time.h>
@@ -118,6 +120,9 @@ double DeltaT (double JD) {
 }
 
 double JulianDay (double seconds, int month, int day, int year) {
+#ifdef TEST_OUTPUT
+  printf("JulianDay called with seconds=%f month=%d, day=%d year=%d\n", seconds, month, day, year);
+#endif
   if (month < 3) {
     year--;
     month += 12;
@@ -125,8 +130,12 @@ double JulianDay (double seconds, int month, int day, int year) {
   int A = year / 100;
   int B = 2 - A + (A / 4);
 
-  return (double) ((int) (365.25 * ((double) year + 4716.0)) + 
+  double val =  (double) ((int) (365.25 * ((double) year + 4716.0)) + 
                    (int) (30.6001 * ((double) month + 1.0)) + day + B) - 1524.5 + seconds / (24.0 * 3600.0);
+#ifdef TEST_OUTPUT
+  printf("Value is %f", val);
+#endif
+  return val;
 }
 
 double JulianDay2 (int month, double day, int year) {
@@ -945,6 +954,9 @@ int main (int argc, char **argv) {
 
   double LST;  
 
+
+  printf("Caling time_of_event with target_altitude=%f month=%d, day=%d, year=%d setting=%d lat=%f, lon=%f, tz=%f",
+	 target_altitude, month, day, year, setting, lat, lon, time_zone);
   LST = time_of_event (target_altitude, month, day, year, setting, lat, lon, time_zone);  // assuming standard sun and normal atmospheric refraction
 
   //printf ("ksldjfsdlk \n");
