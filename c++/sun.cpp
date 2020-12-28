@@ -120,7 +120,7 @@ double DeltaT (double JD) {
 }
 
 double JulianDay (double seconds, int month, int day, int year) {
-#ifdef TEST_OUTPUT
+#ifdef TEST_JULIAN
   printf("JulianDay called with seconds=%f month=%d, day=%d year=%d\n", seconds, month, day, year);
 #endif
   if (month < 3) {
@@ -132,7 +132,7 @@ double JulianDay (double seconds, int month, int day, int year) {
 
   double val =  (double) ((int) (365.25 * ((double) year + 4716.0)) + 
                    (int) (30.6001 * ((double) month + 1.0)) + day + B) - 1524.5 + seconds / (24.0 * 3600.0);
-#ifdef TEST_OUTPUT
+#ifdef TEST_JULIAN
   printf("Value is %f", val);
 #endif
   return val;
@@ -157,6 +157,11 @@ double true_altitude_centre_of_disk_of_Sun (double UT,         // Universal Time
   double JDE;   // Julian Ephemeris Day (based on Terrestrial Dynamical Time)
   double JD;    // Julian Day (based on Universal Time)
   double TD;    // Terrestrial Dynamical Time (A uniform time scale, TD = TAI + 32.184 sec., where TAI is Terrestrial Atomic Time)
+
+#ifdef TEST_OUTPUT
+  printf("true_altitute_of_dis_of_sun_with parameters UT=%f, month=%d, day=%d, year=%d lat=%f, lon=%f\n",
+	 UT, month, day, year, lat, lon);
+#endif    
 
 
   JD  = JulianDay (UT, month, day, year);
@@ -211,8 +216,9 @@ double true_altitude_centre_of_disk_of_Sun (double UT,         // Universal Time
   alpha_app = RAD_TO_DEG * atan2 (cos (DEG_TO_RAD * epsilon) * sin (DEG_TO_RAD * lambda), cos (DEG_TO_RAD * lambda));
   delta_app = RAD_TO_DEG * asin (sin (DEG_TO_RAD * epsilon) * sin (DEG_TO_RAD * lambda));
 
-  /*
+#ifdef TEST_OUTPUT
     printf ("T = %.9f\n", T);
+    printf ("TUT = %f\n", TUT);
     printf ("L0 = %f\n", L0);
     printf ("M = %f\n", M);
     printf ("e = %.9f\n", e);
@@ -225,7 +231,7 @@ double true_altitude_centre_of_disk_of_Sun (double UT,         // Universal Time
     printf ("epsilon = %f\n", epsilon);
     printf ("alpha_app = %f\n", alpha_app);
     printf ("delta_app = %f\n", delta_app);
-  */
+#endif
   double Omega_moon;  // Longitude of the ascending node of the Moon's mean orbit on the ecliptic,
   // measured from the mean equinox of the date
   Omega_moon = 125.04452 - 1934.136261 * T + 0.0020708 * T * T + T * T * T / 450000.0;  
@@ -238,7 +244,9 @@ double true_altitude_centre_of_disk_of_Sun (double UT,         // Universal Time
   nut_long = -17.20 * sin (DEG_TO_RAD * Omega_moon) - 1.32 * sin (DEG_TO_RAD * 2.0 * L0) -
     0.23 * sin (DEG_TO_RAD * 2.0 * L_moon) + 0.21 * sin (DEG_TO_RAD * 2.0 * Omega_moon);  // ????
 
-  //printf ("Omega = %f\nnut_long = %f\n", Omega_moon, nut_long);
+#ifdef TEST_OUTPUT
+  printf ("Omega = %f\nnut_long = %f\n", Omega_moon, nut_long);
+#endif
 
   double theta0;   // Mean sidereal time at Greenwich (degrees)
   theta0 = 280.46061837 + 360.98564736629 * (JD - 2451545.0) + 
@@ -253,6 +261,10 @@ double true_altitude_centre_of_disk_of_Sun (double UT,         // Universal Time
   double h;        // Apparent altitude
   h = RAD_TO_DEG * asin (sin (DEG_TO_RAD * lat) * sin (DEG_TO_RAD * delta_app) +
                          cos (DEG_TO_RAD * lat) * cos (DEG_TO_RAD * delta_app) * cos (DEG_TO_RAD * H));
+
+#ifdef TEST_OUTPUT
+  printf("apparent horizon = %f\n", h);
+#endif
 
   if (azimuth) 
     *azimuth = 0.0;
