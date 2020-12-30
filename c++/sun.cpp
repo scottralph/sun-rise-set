@@ -99,7 +99,7 @@ double to360 (double angle) {
   return angle - (double) N * 360.0;
 }
 
-void error (char *what) {
+void error (const char *what) {
   fprintf (stdout, "\nERROR: %s\n", what);
   exit (636352);
 }
@@ -282,6 +282,11 @@ double time_of_event (double target_altitude,
   double altitude_max = 0.0;
   double UT_noon = 0.0;
 
+#ifdef TEST_OUTPUT
+  printf("Calling with target_alt=%f, month=%d, day=%d, year=%d, setting=%d, lat=%f, lon=%f, tz=%f\n",
+	 target_altitude, month, day, year, setting, lat, lon, time_zone);
+#endif
+
   if (target_altitude > 90.0) {
     UT_low  = (10.0 - time_zone) * 3600.0;
     UT_high = (14.0 - time_zone) * 3600.0;
@@ -360,7 +365,7 @@ void house_of_paul_kry (int month, int day, int year) {
   }
 }
 
-int scom (char *s, char *t) {
+int scom (const char *s, const char *t) {
   /*
     "s" is a pointer to a string which is supplied from the command line.
     "t" is a pointer to a string which is supplied from the testing routines.
@@ -970,6 +975,7 @@ int main (int argc, char **argv) {
   printf("Caling time_of_event with target_altitude=%f month=%d, day=%d, year=%d setting=%d lat=%f, lon=%f, tz=%f",
 	 target_altitude, month, day, year, setting, lat, lon, time_zone);
   LST = time_of_event (target_altitude, month, day, year, setting, lat, lon, time_zone);  // assuming standard sun and normal atmospheric refraction
+  printf("Value of time_of_event is %f\n", LST);
 
   //printf ("ksldjfsdlk \n");
   LST += daylight_savings;

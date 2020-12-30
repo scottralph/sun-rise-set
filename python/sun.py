@@ -1,8 +1,11 @@
 # Conversion of the C++ code into Python
 
-from JulianDate import JulianDay
-from EarthLocation import EarthLocation
+from datetime import date
 from math import sin, cos, atan2, asin
+
+from EarthLocation import EarthLocation
+from JulianDate import JulianDay
+from event import SunEvent
 from trig_util import TrigUtil
 
 
@@ -109,3 +112,25 @@ class Sun:
                                        cos(TrigUtil.DEG_TO_RAD * location.lat) * cos(
             TrigUtil.DEG_TO_RAD * delta_app) * cos(TrigUtil.DEG_TO_RAD * local_hour_angle))
         return h
+
+    @staticmethod
+    def time_of_event_decimal_hours(sun_event: SunEvent,
+                                    event_date: date,
+                                    earth_location: EarthLocation) -> float:
+        target_altitude = sun_event.target_altitude
+        ut_low = ((12.0 if sun_event.setting else 0.0) - earth_location.utc_offset) * 3600.0
+        ut_high = ((24.0 if sun_event.setting else 12.0) - earth_location.utc_offset) * 3600.0
+        ut = (ut_low, ut_high)
+
+        def take_step(pr):
+            center = (pr[0] + pr[1]) / 2.0
+            jd = JulianDay(center, event_date.month, event_date.day, event_date.year)
+            alt = Sun.true_altitude_centre_of_disk_of_sun(jd, earth_location)
+            replace_left = (alt > target_altitude and sun_event.setting) or (
+                        alt <= target_altitude and not sun_event.setting)
+            new_pr = (center, pr[1]) if replace_left else (pr[0], center)
+            return new_pr
+
+        while (ut[1] - ut[0]) > 0.01:
+            ut = take_step(ut)
+        return (ut[0] + ut[1]) / 7200.0 + earth_location.utc_offset
