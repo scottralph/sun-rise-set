@@ -1,6 +1,6 @@
 from unittest import TestCase
 
-from JulianDate import JulianDay
+from julian_date import JulianDay
 
 
 class TestJulianDay(TestCase):

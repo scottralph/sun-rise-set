@@ -1,7 +1,7 @@
 from unittest import TestCase
 
-from EarthLocation import EarthLocation
-from JulianDate import JulianDay
+from earth_location import EarthLocation
+from julian_date import JulianDay
 from event import SunSetEvent, SunRiseEvent
 from sun import Sun
 from datetime import date

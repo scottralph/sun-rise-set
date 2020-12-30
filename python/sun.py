@@ -3,8 +3,8 @@
 from datetime import date
 from math import sin, cos, atan2, asin, floor
 
-from EarthLocation import EarthLocation
-from JulianDate import JulianDay
+from earth_location import EarthLocation
+from julian_date import JulianDay
 from event import SunEvent
 from trig_util import TrigUtil
 
