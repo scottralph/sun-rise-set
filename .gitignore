@@ -2,3 +2,4 @@
 .idea/
 venv/
 a.out
+__pycache__/
