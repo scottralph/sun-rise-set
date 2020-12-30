@@ -1,9 +1,10 @@
+import os
 from datetime import date
 
 import flask
 from flask import request, jsonify
 
-from EarthLocation import EarthLocation
+from earth_location import EarthLocation
 from event import SunEvent
 from sun import Sun
 
@@ -41,14 +42,14 @@ def home():
     earth_location = EarthLocation(lat, lon, utc_offset)
     event_decimal_hours = Sun.time_of_event_decimal_hours(sun_event, date(year, month, day), earth_location)
     time_str = Sun.from_decimal_to_hms(event_decimal_hours)
-
-
     return jsonify({
         'status': 'success',
         'date': {'year': year, 'month': month, 'day': day},
         'utc_offset': utc_offset,
         'event': sun_event.__str__(),
+        'location': {'lat': lat, 'lon': -lon},
         'time_str': time_str})
 
-app.run()
+
+app.run(host="0.0.0.0", port=int(os.environ.get("PORT", 8080)))
 
