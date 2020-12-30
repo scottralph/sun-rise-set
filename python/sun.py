@@ -1,7 +1,7 @@
 # Conversion of the C++ code into Python
 
 from datetime import date
-from math import sin, cos, atan2, asin
+from math import sin, cos, atan2, asin, floor
 
 from EarthLocation import EarthLocation
 from JulianDate import JulianDay
@@ -134,3 +134,15 @@ class Sun:
         while (ut[1] - ut[0]) > 0.01:
             ut = take_step(ut)
         return (ut[0] + ut[1]) / 7200.0 + earth_location.utc_offset
+
+    @staticmethod
+    def from_decimal_to_hms(dh):
+        hour = int(floor(dh))
+        hour_fmt = str(hour).zfill(2)
+        d_minutes = 60.0 * (dh - hour)
+        minutes = int(floor(d_minutes))
+        minutes_fmt = str(minutes).zfill(2)
+        seconds = int(60.0 * (d_minutes - minutes))
+        return f"{hour_fmt}h {minutes_fmt}m {seconds}s"
+
+

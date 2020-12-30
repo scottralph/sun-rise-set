@@ -31,3 +31,8 @@ class TestSun(TestCase):
                                                        date(2020, 12, 30),
                                                        EarthLocation(49.257431, 123.146353, -8.0))
         self.assertLess(abs(setting_time - 8.129552), 0.001)
+
+    def test_hms(self):
+        hms = Sun.from_decimal_to_hms(8.129552)
+        self.assertEqual(hms, '08h 07m 46s')
+
